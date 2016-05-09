@@ -140,21 +140,7 @@ int zmq::server_t::xrecv (msg_t *msg_)
     pipe_t *pipe = NULL;
     int rc = fq.recvpipe (msg_, &pipe);
 
-    // Drop any messages with more flag
-    while (rc == 0 && msg_->flags () & msg_t::more) {
-
-        // drop all frames of the current multi-frame message
-        rc = fq.recvpipe (msg_, NULL);
-
-        while (rc == 0 && msg_->flags () & msg_t::more)
-            rc = fq.recvpipe (msg_, NULL);
-
-        // get the new message
-        if (rc == 0)
-            rc = fq.recvpipe (msg_, &pipe);
-    }
-
-    if (rc != 0)
+    if (unlikely (rc != 0))
         return rc;
 
     zmq_assert (pipe != NULL);

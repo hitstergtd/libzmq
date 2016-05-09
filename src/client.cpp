@@ -65,23 +65,7 @@ int zmq::client_t::xsend (msg_t *msg_)
 
 int zmq::client_t::xrecv (msg_t *msg_)
 {
-    int rc = fq.recvpipe (msg_, NULL);
-
-    // Drop any messages with more flag
-    while (rc == 0 && msg_->flags () & msg_t::more) {
-
-        // drop all frames of the current multi-frame message
-        rc = fq.recvpipe (msg_, NULL);
-
-        while (rc == 0 && msg_->flags () & msg_t::more)
-            rc = fq.recvpipe (msg_, NULL);
-
-        // get the new message
-        if (rc == 0)
-            rc = fq.recvpipe (msg_, NULL);
-    }
-
-    return rc;
+    return fq.recvpipe (msg_, NULL);
 }
 
 bool zmq::client_t::xhas_in ()
