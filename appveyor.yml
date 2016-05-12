@@ -83,3 +83,5 @@ test_script:
   - cmd: cd "%LIBZMQ_BUILDDIR%"
   - cmd: ctest -C "%Configuration%" -V
 
+on_finish:
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
